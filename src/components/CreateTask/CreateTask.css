@@ -1,0 +1,27 @@
+.container-tag {
+  text-align: left;
+  padding-inline: 5px;
+}
+
+.tag {
+  cursor: pointer;
+}
+
+.tag-purple {
+  color: purple;
+}
+
+.tag-green {
+  color: green;
+}
+
+.tag-orange {
+  color: orange;
+}
+
+.tag-blue {
+  color: blue;
+}
+
+
+
