@@ -57,14 +57,14 @@ const CreateTask = () => {
 
   const handleChange = (evt: { target: { value: SetStateAction<string> } }) => {
     const value = evt.target.value.toString()
-
+    let newValue = value;
     if (value.endsWith(" <br>") || value.endsWith(" ")) {
       const pattern = checkIfExistLastPattern(value)
       const processed = processTest(pattern)
-      value.replace(pattern, processed)
+      newValue = value.replace(pattern, processed)
     }
-    setHtmlValue(value)
-    setOriginValue(value)
+    setHtmlValue(newValue)
+    setOriginValue(newValue)
 
   };
 
