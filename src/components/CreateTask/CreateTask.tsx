@@ -1,4 +1,4 @@
-import { SetStateAction, useRef, useState } from "react"
+import { FocusEventHandler, SetStateAction, useRef, useState } from "react"
 import ContentEditable from "react-contenteditable"
 import './CreateTask.css'
 import checkIfExistLastPattern from "../../util/checkIfExistLastPattern"
@@ -36,7 +36,7 @@ const buttonsBar: IButtonIcon[] = [
 const isDisabled = (val: string) => val === ''|| val === '<br>'
 
 
-const CreateTask = ({task} : {task : ITask | undefined}) => {
+const CreateTask = ({task} : {task? : ITask | undefined}) => {
   const [showButtonBar, setShowButtonBar] = useState(false)
   const [originValue, setOriginValue] = useState('')
   const [htmlValue, setHtmlValue] = useState('')
@@ -106,8 +106,9 @@ const CreateTask = ({task} : {task : ITask | undefined}) => {
   };
 
   const handleBlur = (event: React.FocusEvent<HTMLDivElement> | undefined) => {
-    const element =  event?.nativeEvent.explicitOriginalTarget;
-
+    const  element  =  (event?.nativeEvent as FocusEvent & {
+      explicitOriginalTarget: HTMLElement
+    }).explicitOriginalTarget
     if(event && wrapperRef.current && !wrapperRef.current.contains(element) ) {
       handleCancel()
     }
