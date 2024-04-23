@@ -1,4 +1,4 @@
-import { FocusEventHandler, SetStateAction, useRef, useState } from "react"
+import { SetStateAction, useRef, useState } from "react"
 import ContentEditable from "react-contenteditable"
 import './CreateTask.css'
 import checkIfExistLastPattern from "../../util/checkIfExistLastPattern"
