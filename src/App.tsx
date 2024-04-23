@@ -4,9 +4,9 @@ import CreateTask from './components/CreateTask/CreateTask'
 function App() {
 
   return (
-    <>
+    <div className='content'>
       <CreateTask />
-    </>
+    </div>
   )
 }
 
