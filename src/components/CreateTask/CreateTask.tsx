@@ -95,7 +95,7 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
   const handleChange = (evt: { target: { value: SetStateAction<string> } }) => {
     const value = evt.target.value.toString()
     let newValue = value;
-    if (value.endsWith(" <br>") || value.endsWith(" ")) {
+    if (value.endsWith(" <br>") || value.endsWith(" ") || value.endsWith("&nbsp;")) {
       const pattern = checkIfExistLastPattern(value)
       const processed = processTest(pattern)
       newValue = value.replace(pattern, processed)

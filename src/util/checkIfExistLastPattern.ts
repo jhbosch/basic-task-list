@@ -2,6 +2,7 @@
 const checkIfExistLastPattern = (text: string = ''): string => {
 
   // check tag with pattern @ or #
+  text = text.replaceAll("&nbsp;"," ");
   const isPattern = text.match(/ ((#|@)(\w+ ))/g)
 
   if(isPattern && isPattern.length > 0) {
