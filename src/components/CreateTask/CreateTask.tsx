@@ -5,8 +5,9 @@ import checkIfExistLastPattern from "../../util/checkIfExistLastPattern"
 import processTest from "../../util/processText"
 import FeatherIcon from "feather-icons-react"
 import { ButtonActionResponseDelete, ButtonActionResponsePrimary, ButtonIconResponse } from "../Button/Button"
-import { IButtonAction, IButtonIcon, ITask } from "../../util/interface"
+import { IButtonAction, IButtonIcon, ICreateTaskProps, ITask } from "../../util/interface"
 import Avatar from "@mui/material/Avatar"
+import Checkbox from "@mui/material/Checkbox"
 
 
 const buttonsBar: IButtonIcon[] = [
@@ -33,9 +34,9 @@ const buttonsBar: IButtonIcon[] = [
 ]
 
 
-const CreateTask = ({task} : {task? : ITask | undefined}) => {
+const CreateTask = ({task, createTask} : ICreateTaskProps) => {
   const [showButtonBar, setShowButtonBar] = useState(false)
-  const [originValue, setOriginValue] = useState(task ? task.value : '')
+  const [originValue, setOriginValue] = useState(task ? task.description : '')
   const [taskInicial] = useState(task)
 
   const placeHolder: string = '<span contenteditable="false" class="custom-place-holder">Type to add new task</span>'
@@ -72,17 +73,29 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
     setShowButtonBar(true)
   }
 
+  const handleCreate = () => {
+    const newTask: ITask = {
+      description: originValue,
+    }
+    console.log(newTask)
+    if(createTask) {
+      createTask(newTask)
+      handleCancel()
+      setOriginValue('')
+    }
+  }
+
   const getButtonActionState = () : IButtonAction => {
-    if(isNew() && !isEmpty()) return {title: "ADD", icon: "plus", onClick: () => {} }
+    if(isNew() && !isEmpty()) return {title: "ADD", icon: "plus", onClick: handleCreate }
     if(isEditing() && !isEmpty()) return {title: "Save", icon: "save", onClick: () => {} }
 
-    return {title: "OK", icon:"x", onClick: () => {} }
+    return {title: "OK", icon:"x", onClick: () => {handleCancel} }
   }
 
   const isDisabled = (val: string) => val === ''|| val === '<br>'
 
   const isEditing = () => {
-    return taskInicial && taskInicial.value != originValue
+    return taskInicial && taskInicial.description != originValue
   }
 
   const isNew = () => {
@@ -120,7 +133,7 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
     }
 
     if(!showButtonBar && task) {
-      return task.value;
+      return task.description;
     }
 
     return originValue
@@ -131,7 +144,7 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
     <div ref={wrapperRef} className={showButtonBar ? "container-task active" : "container-task"}>
       <div className="container-task-add">
         <div className="container-task-add-icon-plus" onClick={() => inputRef.current && inputRef.current.focus() } data-testid="icon-plus" >
-          <FeatherIcon icon="plus-square" />
+          { isNew() ? <FeatherIcon icon="plus-square" /> : <FeatherIcon icon="square" />}
         </div>
         <ContentEditable
           innerRef={inputRef}
