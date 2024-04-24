@@ -7,7 +7,6 @@ import FeatherIcon from "feather-icons-react"
 import { ButtonActionResponseDelete, ButtonActionResponsePrimary, ButtonIconResponse } from "../Button/Button"
 import { IButtonAction, IButtonIcon, ICreateTaskProps, ITask } from "../../util/interface"
 import Avatar from "@mui/material/Avatar"
-import Checkbox from "@mui/material/Checkbox"
 
 
 const buttonsBar: IButtonIcon[] = [
