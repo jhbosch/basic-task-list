@@ -71,18 +71,46 @@
 
 .tag-purple {
   color: purple;
+  background-color: #80008059;
+  border-radius: 13px;
+  padding: 4px;
+}
+
+.container-task.active .tag-purple {
+  background-color: #fff;
 }
 
 .tag-green {
   color: green;
+  background-color: rgba(0, 128, 0, 0.382);
+  border-radius: 13px;
+  padding: 4px;
+}
+
+.container-task.active .tag-green {
+  background-color: #fff;
 }
 
 .tag-orange {
   color: orange;
+  background-color: #ffa50040;
+  border-radius: 13px;
+  padding: 4px;
+}
+
+.container-task.active .tag-orange {
+  background-color: #fff;
 }
 
 .tag-blue {
   color: blue;
+  background-color: #0000ff59;
+  border-radius: 13px;
+  padding: 4px;
+}
+
+.container-task.active .tag-blue {
+  background-color: #fff;
 }
 
 div.disabled {
@@ -92,6 +120,10 @@ div.disabled {
 
 .icon-btn {
   border-radius: 7%;
+}
+
+.custom-place-holder {
+  color: #b9b7b7
 }
 
 
