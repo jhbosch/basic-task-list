@@ -5,7 +5,7 @@ import checkIfExistLastPattern from "../../util/checkIfExistLastPattern"
 import processTest from "../../util/processText"
 import FeatherIcon from "feather-icons-react"
 import { ButtonActionResponseDelete, ButtonActionResponsePrimary, ButtonIconResponse } from "../Button/Button"
-import { IButtonAction, IButtonIcon, ITask } from "../../util/interface"
+import { IButtonAction, IButtonIcon, ICreateTaskProps, ITask } from "../../util/interface"
 import Avatar from "@mui/material/Avatar"
 
 
@@ -33,14 +33,12 @@ const buttonsBar: IButtonIcon[] = [
 ]
 
 
-const isDisabled = (val: string) => val === ''|| val === '<br>'
-
-
-const CreateTask = ({task} : {task? : ITask | undefined}) => {
+const CreateTask = ({task, createTask} : ICreateTaskProps) => {
   const [showButtonBar, setShowButtonBar] = useState(false)
-  const [originValue, setOriginValue] = useState('')
-  const [htmlValue, setHtmlValue] = useState('')
+  const [originValue, setOriginValue] = useState(task ? task.description : '')
   const [taskInicial] = useState(task)
+
+  const placeHolder: string = '<span contenteditable="false" class="custom-place-holder">Type to add new task</span>'
 
   const inputRef: React.RefObject<HTMLDivElement> = useRef(null)
   const wrapperRef: React.RefObject<HTMLDivElement>  = useRef(null);
@@ -59,15 +57,12 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
 
   const handleCancel = () => {
     setShowButtonBar(false)
-    setOriginValue('')
-    setHtmlValue('')
-
   }
 
   const ShowActionBton = () => {
     return (
       <div className="container-task-add-button-bar-right">
-        <ButtonActionResponseDelete title="Cancel" icon="trash-2" onClick={handleCancel} disabled={isDisabled(originValue)}/>
+        <ButtonActionResponseDelete title="Cancel" icon="trash-2" onClick={handleCancel} disabled={isEmpty()}/>
         <ButtonActionResponsePrimary {...getButtonActionState()} />
       </div>
     )
@@ -77,19 +72,37 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
     setShowButtonBar(true)
   }
 
-  const getButtonActionState = () : IButtonAction => {
-    if(isNew()) return {title: "ADD", icon: "plus", onClick: () => {} }
-    if(isEditing()) return {title: "Save", icon: "save", onClick: () => {} }
-
-    return {title: "OK", icon:"x", onClick: () => {} }
+  const handleCreate = () => {
+    const newTask: ITask = {
+      description: originValue,
+    }
+    console.log(newTask)
+    if(createTask) {
+      createTask(newTask)
+      handleCancel()
+      setOriginValue('')
+    }
   }
 
+  const getButtonActionState = () : IButtonAction => {
+    if(isNew() && !isEmpty()) return {title: "ADD", icon: "plus", onClick: handleCreate }
+    if(isEditing() && !isEmpty()) return {title: "Save", icon: "save", onClick: () => {} }
+
+    return {title: "OK", icon:"x", onClick: () => {handleCancel} }
+  }
+
+  const isDisabled = (val: string) => val === ''|| val === '<br>'
+
   const isEditing = () => {
-    return taskInicial && taskInicial.value != originValue
+    return taskInicial && taskInicial.description != originValue
   }
 
   const isNew = () => {
-    return !taskInicial && originValue !== '' && originValue !== '<br>'
+    return !taskInicial
+  }
+
+  const isEmpty = () => {
+    return originValue === '' || originValue === '<br>'
   }
 
   const handleChange = (evt: { target: { value: SetStateAction<string> } }) => {
@@ -100,7 +113,6 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
       const processed = processTest(pattern)
       newValue = value.replace(pattern, processed)
     }
-    setHtmlValue(newValue)
     setOriginValue(newValue)
 
   };
@@ -114,16 +126,28 @@ const CreateTask = ({task} : {task? : ITask | undefined}) => {
     }
   }
 
+  const handleShowValue = () => {
+    if((!showButtonBar && isNew())) {
+      return placeHolder;
+    }
+
+    if(!showButtonBar && task) {
+      return task.description;
+    }
+
+    return originValue
+  }
+
 
   return (
-    <div ref={wrapperRef} className="container-task">
+    <div ref={wrapperRef} className={showButtonBar ? "container-task active" : "container-task"}>
       <div className="container-task-add">
         <div className="container-task-add-icon-plus" onClick={() => inputRef.current && inputRef.current.focus() } data-testid="icon-plus" >
-          <FeatherIcon icon="plus-square" />
+          { isNew() ? <FeatherIcon icon="plus-square" /> : <FeatherIcon icon="square" />}
         </div>
         <ContentEditable
           innerRef={inputRef}
-          html={htmlValue} // innerHTML of the editable div
+          html={handleShowValue()} // innerHTML of the editable div
           disabled={false} // use true to disable edition
           onChange={handleChange} // handle innerHTML change
           onFocus={handleFocus}
